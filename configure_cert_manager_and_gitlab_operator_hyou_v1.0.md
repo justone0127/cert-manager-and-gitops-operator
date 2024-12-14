@@ -93,7 +93,7 @@ GibLab이 샐행되는 OpenShift 클러스터에 인증서를 등록합니다.
 
 - GitLab Pod에 TLS 인증서 적용 : GitLab Pod가 `gitlab-tls`를 참조하도록 구성합니다.
 
-### 4. GitLab에 Root CA 등록
+### 4. GitLab에 Root CA 등록 및 인스턴스 생성
 
 인스턴스 생성 시 인증서를 참조하도록 설정합니다.
 
