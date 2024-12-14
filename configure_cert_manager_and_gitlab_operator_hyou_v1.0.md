@@ -48,9 +48,8 @@
 - Cluster Issuer 상태 확인
 
   상태가 아래 그림처럼 Ready 상태여야 인증서가 정상적으로 생성된 것입니다.
-  
-  ![17_cluster_issuer](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\17_cluster_issuer.png)
-  
+
+  <img src="images/17_cluster_issuer.png" title="100px" alt="cluster issuer 상세"> <br>
 - ca-issuer를 선택하여 아래 상태 확인 시 *Sigining CA verified*라고 보여야 합니다.
 
   ![18_ca_issuer_ready](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\18_ca_issuer_ready.png)
