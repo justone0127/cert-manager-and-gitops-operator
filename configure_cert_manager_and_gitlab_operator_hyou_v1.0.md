@@ -566,27 +566,27 @@ Webhook URL은 Route 주소를 사용하고, 뒤에 api 주소는 BuildConfig에
 ### 17. 소스 수정 후 커밋
 
 `app.js` 파일 내용 수정 후 커밋을 수행합니다.
-<img src="images/35_source_update.png" title="100px" alt=source_update"> <br>
+<img src="images/35_source_update.png" title="100px" alt="source_update"> <br>
 
 ### 18. Build Trigger 확인
 
 소스 내용 수정 후 커밋을 수행하면 다음과 같이 새로운 Build가 자동으로 실행되는 것을 확인 할 수 있으며, 이전에 Test로 날린 API에 대해서도 Build가 자동으로 수행되었음을 확인할 수 있습니다.
-<img src="images/36_build_trigger.png" title="100px" alt=build_trigger"> <br>
+<img src="images/36_build_trigger.png" title="100px" alt="build_trigger"> <br>
 
 - 이미지 스트림 태그 확인
 
   새로운 이미지가 빌드 되었으므로 새로운 이미지 스트림 태그가 생겼을 것 입니다. 이미지 스트림 태그의 digest가 변경되었는지 확인합니다.
-  <img src="images/37_image_stream_tag.png" title="100px" alt=image_stream_tag"> <br>  
+  <img src="images/37_image_stream_tag.png" title="100px" alt="image_stream_tag"> <br>  
 
 - Deployment Rollout
 
   새로운 빌드 수행이 완료 되었다면 Deployment를 롤아웃 해서 새로운 이미지로 기동 될 수 있게 합니다.
-  <img src="images/38_rollout.png" title="100px" alt=rollout"> <br> 
+  <img src="images/38_rollout.png" title="100px" alt="rollout"> <br> 
 
 ### 19. 페이지 확인
 
 - 수정 전
-  <img src="images/38_org_pages.png" title="100px" alt=org_pages"> <br> 
+  <img src="images/38_org_pages.png" title="100px" alt="org_pages"> <br> 
 
 - 수정 후
-  <img src="images/39_after_pages.png" title="100px" alt=after_pages"> <br> 
+  <img src="images/39_after_pages.png" title="100px" alt="after_pages"> <br> 
