@@ -132,7 +132,7 @@ GibLab이 샐행되는 OpenShift 클러스터에 인증서를 등록합니다.
 구성요소가 정상적으로 올라오면 gitLab 인스턴스가 Ready 상태로 변경되며, 모든 구성요소가 올라오는 데까지는 시간이 조금 걸립니다.
 
 - 상태 확인
-  <img src="images/gitlab_instance_running.png" title="100px" alt="gitlab_instance_running"> <br>
+  <img src="images/20_gitlab_instance_running.png" title="100px" alt="gitlab_instance_running"> <br>
 
 ### 5. Cert Manager 상태 확인
 
@@ -417,22 +417,18 @@ Ingress가 올 바르게 Cert Manager에서 발급한 인증서를 사용하고 
 GitLab은 기본적으로 Local Network를 허용하지 않습니다. 아래 Webhook URL을 보면 내부 로컬을 호출하도록 되어 있어서 이를 허용해야 합니다.
 
 - 깃 로고 아이콘 선택 > 하단의 Amin 메뉴 선택
-
-  ![10_local_network_setting_01](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\10_local_network_setting_01.png)
+  <img src="images/10_local_network_setting_01.png title="100px" alt="local_network_setting_01"> <br>
 
 - Network > Outbounds requests > Allow requests to the local network from webhooks and integrations를 선택하고 저장합니다.
-
-  ![10_local_network_setting_02](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\10_local_network_setting_02.png)
+  <img src="images/10_local_network_setting_02.png title="100px" alt="local_network_setting_02"> <br>
 
 ### 11. 프로젝트 생성 및 리포지토리 권한 설정 변경
 
 - 프로젝트 생성 메뉴를 선택합니다.
-
-  ![23_create_gitlab_project](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\23_create_gitlab_project.png)
-
+  <img src="images/23_create_gitlab_project.png title="100px" alt="create_gitlab_project"> <br>
+  
 - **Create blank project** 메뉴를 선택합니다.
-
-  ![24_create_gitlab_project02](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\24_create_gitlab_project02.png)
+  <img src="images/24_create_gitlab_project02.png title="100px" alt="create_gitlab_project02"> <br>
 
 - 상세 설정 후 Create Proejct를 선택합니다.
 
@@ -441,14 +437,12 @@ GitLab은 기본적으로 Local Network를 허용하지 않습니다. 아래 Web
   - Project URL : namespace는 `root`를 선택
 
   - Visibility Level : `Public`
-
-    ![24_create_gitlab_project03](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\24_create_gitlab_project03.png)
+    <img src="images/24_create_gitlab_project03.png title="100px" alt="create_gitlab_project03"> <br>
 
 ### 12. 프로젝트 리포지토리 권한 설정 변경
 
 소소 코드를 Push 할 수 있도록 권한 설정을 다음과 같이 변경하여 반영합니다.
-
-![25_change_repository_settings](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\25_change_repository_settings.png)
+<img src="images/25_change_repository_settings.png title="100px" alt="change_repository_settings"> <br>
 
 ### 13. 소스 코드 복사 및 저장소에 업로드
 
@@ -495,20 +489,17 @@ GitLab은 기본적으로 Local Network를 허용하지 않습니다. 아래 Web
 ### 15. 애플리케이션 배포
 
 애플리케이션 배포는 nodejs builder 이미지로 배포하며 추후에 Deployment는 수정해야 할 수 있습니다.
-
-![26_nodejs_builder_images](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\26_nodejs_builder_images.png)
+<img src="images/26_nodejs_builder_images.png title="100px" alt="nodejs_builder_images"> <br>
 
 - 배포 시 Target Port는 `3000` 으로 설정하여 배포합니다.
-
-  ![27_change_port](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\27_change_port.png)
+<img src="images/27_change_port.png title="100px" alt="change_port"> <br>
 
 ### 16. Webhook 설정
 
 Webhook URL은 Route 주소를 사용하고, 뒤에 api 주소는 BuildConfig에서 값을 확인하여 수정합니다.
 
 - 설정 값 확인
-
-  ![28_webhook](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\28_webhook.png)
+  <img src="images/28_webhook.png title="100px" alt="webhook"> <br>
 
 - Webhook URL
 
@@ -521,8 +512,7 @@ Webhook URL은 Route 주소를 사용하고, 뒤에 api 주소는 BuildConfig에
   ```bash
   0c3caffd03fb4878
   ```
-
-  ![31_copy_secret](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\31_copy_secret.png)
+  <img src="images/31_copy_secret.png title="100px" alt="copy_secret"> <br>
 
 - 허가 받지 않은 사용자에 대한 `system:webhook` 롤 바인딩 설정 추가
 
@@ -557,59 +547,46 @@ Webhook URL은 Route 주소를 사용하고, 뒤에 api 주소는 BuildConfig에
     ```
 
 - GitLab Webhook 설정 화면
-
-  ![29_webhook_settings](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\29_webhook_settings.png)
+  <img src="images/29_webhook_settings.png title="100px" alt="webhook_settings"> <br>
 
 - SSL verification 체크 해제
 
   Webhooks 메뉴의 아랫 부분에 있습니다.
-
-  ![30_ssl_verification_false](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\30_ssl_verification_false.png)
+  <img src="images/30_ssl_verification_false.png title="100px" alt="ssl_verification_false"> <br>
 
 - 추가된 Webhook 확인
-
-  ![32_add_webhook](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\32_add_webhook.png)
+  <img src="images/32_add_webhook.png title="100px" alt="add_webhook"> <br>
 
 - Test 버튼을 눌러서 Push events를 선택하여 API를 호출 테스트를 진행합니다.
-
-  ![33_push_test](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\33_push_test.png)
+  <img src="images/33_push_test.png title="100px" alt="push_test"> <br>
 
 - 상단에 HTTP 200이 보이면 성공한 것이며, 이제 소스 커밋 후 Trigger되는 것을 테스트 해볼 수 있습니다.
-
-  ![34_webhook_test_ok](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\34_webhook_test_ok.png)
+  <img src="images/34_webhook_test_ok.png title="100px" alt="webhook_test_ok"> <br>
 
 ### 17. 소스 수정 후 커밋
 
 `app.js` 파일 내용 수정 후 커밋을 수행합니다.
-
-![35_source_update](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\35_source_update.png)
+<img src="images/35_source_update.png title="100px" alt=source_update"> <br>
 
 ### 18. Build Trigger 확인
 
 소스 내용 수정 후 커밋을 수행하면 다음과 같이 새로운 Build가 자동으로 실행되는 것을 확인 할 수 있으며, 이전에 Test로 날린 API에 대해서도 Build가 자동으로 수행되었음을 확인할 수 있습니다.
-
-![36_build_trigger](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\36_build_trigger.png)
+<img src="images/36_build_trigger.png title="100px" alt=build_trigger"> <br>
 
 - 이미지 스트림 태그 확인
 
   새로운 이미지가 빌드 되었으므로 새로운 이미지 스트림 태그가 생겼을 것 입니다. 이미지 스트림 태그의 digest가 변경되었는지 확인합니다.
-
-  ![37_image_stream_tag](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\37_image_stream_tag.png)
-
-  
+  <img src="images/37_image_stream_tag.png title="100px" alt=image_stream_tag"> <br>  
 
 - Deployment Rollout
 
   새로운 빌드 수행이 완료 되었다면 Deployment를 롤아웃 해서 새로운 이미지로 기동 될 수 있게 합니다.
-
-  ![38_rollout](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\38_rollout.png)
+  <img src="images/38_rollout.png title="100px" alt=rollout"> <br> 
 
 ### 19. 페이지 확인
 
 - 수정 전
-
-  ![38_org_pages](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\38_org_pages.png)
+  <img src="images/38_org_pages.png title="100px" alt=org_pages"> <br> 
 
 - 수정 후
-
-  ![39_after_pages](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\39_after_pages.png)
+  <img src="images/39_after_pages.png title="100px" alt=after_pages"> <br> 
