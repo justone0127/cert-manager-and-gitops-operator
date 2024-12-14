@@ -49,11 +49,9 @@
 
   상태가 아래 그림처럼 Ready 상태여야 인증서가 정상적으로 생성된 것입니다.
 
-  <img src="images/17_cluster_issuer.png" title="100px" alt="cluster issuer 상세"> <br>
+  <img src="images/17_cluster_issuer.png" title="100px" alt="cluster issuer details"> <br>
 - ca-issuer를 선택하여 아래 상태 확인 시 *Sigining CA verified*라고 보여야 합니다.
-
-  ![18_ca_issuer_ready](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\18_ca_issuer_ready.png)
-  
+  <img src="images/18_ca_issuer_ready.png" title="100px" alt="cluster issuer ready"> <br>
 - GitLab 도메인을 위한 인증서 요청
 
   GitLab 인증서 요청을 위해서는 GitLab Operator가 설치되어 있어야 하며, Operator 설치 시 자동으로 생성되는 `gitlab-system` 네임스페이스에 생성합니다.
@@ -79,9 +77,8 @@
 - 인증서 생성 확인
 
   다음과 같이 상태가 Ready 상태이면 정상적으로 생성된 것 입니다.
-
-  ![19_gitlab_certificate](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\19_gitlab_certificate.png)
-
+  <img src="images/19_gitlab_certificate.png" title="100px" alt="gitlab_certificate"> <br>
+  
 ### 3. OpenShift에 인증서 등록
 
 GibLab이 샐행되는 OpenShift 클러스터에 인증서를 등록합니다.
@@ -135,8 +132,7 @@ GibLab이 샐행되는 OpenShift 클러스터에 인증서를 등록합니다.
 구성요소가 정상적으로 올라오면 gitLab 인스턴스가 Ready 상태로 변경되며, 모든 구성요소가 올라오는 데까지는 시간이 조금 걸립니다.
 
 - 상태 확인
-
-  ![20_gitlab_instance_running](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\20_gitlab_instance_running.png)
+  <img src="images/gitlab_instance_running.png" title="100px" alt="gitlab_instance_running"> <br>
 
 ### 5. Cert Manager 상태 확인
 
@@ -404,20 +400,17 @@ Ingress가 올 바르게 Cert Manager에서 발급한 인증서를 사용하고 
 - GitLab Web Service Defaulst 및 Webhook URL을 외부에서 호출 할 수 있도록 해당 서비스를 Route로 노출해야 합니다. 기본으로 노출되어 있지 않습니다.
 
 - GitLab Web Service Default 
-
-  ![21_gitlab_route2](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\21_gitlab_route2.png)
+  <img src="images/21_gitlab_route2.png title="100px" alt="gitlab_route"> <br>
 
 - 콘솔 확인
-
-  ![22_gitlab_route_console](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\22_gitlab_route_console.png)
+  <img src="images/22_gitlab_route_console.png title="100px" alt="gitlab_route_console"> <br>
 
 ### 9. GitLab 최초 로그인 시 inistial 비밀번호 확인
 
 - `gitlab-system` 에 `gitlab-gitlab-initial-root-password` 정보를 확인하여 로그인 후 패스워드 변경
 
 - 프로젝트 생성하고 Repository에 Push 권한 부여
-
-  ![01_repository](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\01_repository.png)
+  <img src="images/01_repository.png title="100px" alt="repository"> <br>
 
 ### 10-. Local Network 허용 
 
