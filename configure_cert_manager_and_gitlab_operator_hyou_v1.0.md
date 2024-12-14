@@ -589,4 +589,198 @@ Webhook URL은 Route 주소를 사용하고, 뒤에 api 주소는 BuildConfig에
   <img src="images/38_org_pages.png" title="100px" alt="org_pages"> <br> 
 
 - 수정 후 <br>
-  <img src="images/39_after_pages.png" title="100px" alt="after_pages"> <br> 
+  <img src="images/39_after_pages.png" title="100px" alt="after_pages"> <br>
+
+### 20. OpenShift Pipelines Trigger
+
+- 사전 요구 사항
+  
+- OpenShift Pipeline Opeator가 설치 되어 있어야 함
+  
+- Rollout 포함 Pipeline YAML
+
+  ```yaml
+  apiVersion: tekton.dev/v1
+  kind: Pipeline
+  metadata:
+    name: test-app-rollout
+    namespace: test
+  spec:
+    params:
+      - default: test-app
+        name: APP_NAME
+        type: string
+      - default: 'https://gitlab.apps.cluster-hfqtc.hfqtc.sandbox2220.opentlc.com/root/test.git'
+        name: GIT_REPO
+        type: string
+      - default: main
+        name: GIT_REVISION
+        type: string
+      - default: 'image-registry.openshift-image-registry.svc:5000/test/test-app'
+        name: IMAGE_NAME
+        type: string
+      - default: .
+        name: PATH_CONTEXT
+        type: string
+      - default: 20-ubi8
+        name: VERSION
+        type: string
+    tasks:
+      - name: fetch-repository
+        params:
+          - name: url
+            value: $(params.GIT_REPO)
+          - name: revision
+            value: $(params.GIT_REVISION)
+          - name: subdirectory
+            value: ''
+          - name: deleteExisting
+            value: 'true'
+        taskRef:
+          kind: ClusterTask
+          name: git-clone
+        workspaces:
+          - name: output
+            workspace: workspace
+      - name: build
+        params:
+          - name: IMAGE
+            value: $(params.IMAGE_NAME)
+          - name: TLSVERIFY
+            value: 'false'
+          - name: PATH_CONTEXT
+            value: $(params.PATH_CONTEXT)
+          - name: VERSION
+            value: $(params.VERSION)
+        runAfter:
+          - fetch-repository
+        taskRef:
+          kind: ClusterTask
+          name: s2i-nodejs
+        workspaces:
+          - name: source
+            workspace: workspace
+      - name: rollout-deployment
+        params:
+          - name: SCRIPT
+            value: |
+              oc rollout restart deployment/$(params.APP_NAME) -n test && \
+              oc rollout status deployment/$(params.APP_NAME) -n test
+        runAfter:
+          - build
+        taskRef:
+          kind: ClusterTask
+          name: openshift-client
+    workspaces:
+      - name: workspace
+  ```
+
+- Event Trigger Template YAML
+
+  ```yaml
+  apiVersion: triggers.tekton.dev/v1beta1
+  kind: TriggerBinding
+  metadata:
+    name: test-app
+  spec:
+    params:
+    - name: git-repo-url
+      value: $(body.repository.url)
+    - name: git-repo-name
+      value: $(body.repository.name)
+    - name: git-revision
+      value: $(body.head_commit.id)
+  ---
+  apiVersion: triggers.tekton.dev/v1beta1
+  kind: TriggerTemplate
+  metadata:
+    name: test-app
+  spec:
+    params:
+    - name: git-repo-url
+      description: The git repository url
+    - name: git-revision
+      description: The git revision
+      default: pipelines-1.15.1
+    - name: git-repo-name
+      description: The name of the deployment to be created / patched
+  
+    resourcetemplates:
+    - apiVersion: tekton.dev/v1
+      kind: PipelineRun
+      metadata:
+        generateName: build-deploy-$(tt.params.git-repo-name)-
+      spec:
+        params:
+          - name: APP_NAME
+            value: test-app
+          - name: GIT_REPO
+            value: 'https://gitlab.apps.cluster-hfqtc.hfqtc.sandbox2220.opentlc.com/root/test.git'
+          - name: GIT_REVISION
+            value: main
+          - name: IMAGE_NAME
+            value: 'image-registry.openshift-image-registry.svc:5000/test/test-app'
+          - name: PATH_CONTEXT
+            value: .
+          - name: VERSION
+            value: 20-ubi8
+        pipelineRef:
+          name: test-app-rollout
+        taskRunTemplate:
+          serviceAccountName: pipeline
+        timeouts:
+          pipeline: 1h0m0s
+        workspaces:
+          - name: workspace
+            volumeClaimTemplate:
+              metadata:
+                creationTimestamp: null
+                labels:
+                  tekton.dev/pipeline: test-app
+              spec:
+                accessModes:
+                  - ReadWriteOnce
+                resources:
+                  requests:
+                    storage: 1Gi
+              status: {}
+  ---
+  apiVersion: triggers.tekton.dev/v1beta1
+  kind: Trigger
+  metadata:
+    name: test-app-trigger
+  spec:
+    serviceAccountName: pipeline
+    bindings:
+      - ref: test-app
+    template:
+      ref: test-app
+  ---
+  apiVersion: triggers.tekton.dev/v1beta1
+  kind: EventListener
+  metadata:
+    name: test-app
+  spec:
+    serviceAccountName: pipeline
+    triggers:
+    - bindings:
+      - ref: test-app
+      template:
+        ref: test-app
+  ---
+  apiVersion: route.openshift.io/v1
+  kind: Route
+  metadata:
+    labels:
+      app.kubernetes.io/managed-by: EventListener
+      app.kubernetes.io/part-of: Triggers
+      eventlistener: test-app
+    name: el-test-app
+  spec:
+    port:
+      targetPort: http-listener
+    to:
+      kind: Service
+      name: el-test-app
+      weight: 100
+  ```
