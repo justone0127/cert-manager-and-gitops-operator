@@ -399,36 +399,36 @@ Ingress가 올 바르게 Cert Manager에서 발급한 인증서를 사용하고 
 
 - GitLab Web Service Defaulst 및 Webhook URL을 외부에서 호출 할 수 있도록 해당 서비스를 Route로 노출해야 합니다. 기본으로 노출되어 있지 않습니다.
 
-- GitLab Web Service Default 
-  <img src="images/21_gitlab_route2.png title="100px" alt="gitlab_route"> <br>
+- GitLab Web Service Default
+  <img src="images/21_gitlab_route2.png" title="100px" alt="gitlab_route"> <br>
 
 - 콘솔 확인
-  <img src="images/22_gitlab_route_console.png title="100px" alt="gitlab_route_console"> <br>
+  <img src="images/22_gitlab_route_console.png" title="100px" alt="gitlab_route_console"> <br>
 
 ### 9. GitLab 최초 로그인 시 inistial 비밀번호 확인
 
 - `gitlab-system` 에 `gitlab-gitlab-initial-root-password` 정보를 확인하여 로그인 후 패스워드 변경
 
 - 프로젝트 생성하고 Repository에 Push 권한 부여
-  <img src="images/01_repository.png title="100px" alt="repository"> <br>
+  <img src="images/01_repository.png" title="100px" alt="repository"> <br>
 
 ### 10-. Local Network 허용 
 
 GitLab은 기본적으로 Local Network를 허용하지 않습니다. 아래 Webhook URL을 보면 내부 로컬을 호출하도록 되어 있어서 이를 허용해야 합니다.
 
 - 깃 로고 아이콘 선택 > 하단의 Amin 메뉴 선택
-  <img src="images/10_local_network_setting_01.png title="100px" alt="local_network_setting_01"> <br>
+  <img src="images/10_local_network_setting_01.png" title="100px" alt="local_network_setting_01"> <br>
 
 - Network > Outbounds requests > Allow requests to the local network from webhooks and integrations를 선택하고 저장합니다.
-  <img src="images/10_local_network_setting_02.png title="100px" alt="local_network_setting_02"> <br>
+  <img src="images/10_local_network_setting_02.png" title="100px" alt="local_network_setting_02"> <br>
 
 ### 11. 프로젝트 생성 및 리포지토리 권한 설정 변경
 
 - 프로젝트 생성 메뉴를 선택합니다.
-  <img src="images/23_create_gitlab_project.png title="100px" alt="create_gitlab_project"> <br>
+  <img src="images/23_create_gitlab_project.png" title="100px" alt="create_gitlab_project"> <br>
   
 - **Create blank project** 메뉴를 선택합니다.
-  <img src="images/24_create_gitlab_project02.png title="100px" alt="create_gitlab_project02"> <br>
+  <img src="images/24_create_gitlab_project02.png" title="100px" alt="create_gitlab_project02"> <br>
 
 - 상세 설정 후 Create Proejct를 선택합니다.
 
@@ -437,12 +437,12 @@ GitLab은 기본적으로 Local Network를 허용하지 않습니다. 아래 Web
   - Project URL : namespace는 `root`를 선택
 
   - Visibility Level : `Public`
-    <img src="images/24_create_gitlab_project03.png title="100px" alt="create_gitlab_project03"> <br>
+    <img src="images/24_create_gitlab_project03.png" title="100px" alt="create_gitlab_project03"> <br>
 
 ### 12. 프로젝트 리포지토리 권한 설정 변경
 
 소소 코드를 Push 할 수 있도록 권한 설정을 다음과 같이 변경하여 반영합니다.
-<img src="images/25_change_repository_settings.png title="100px" alt="change_repository_settings"> <br>
+<img src="images/25_change_repository_settings.png" title="100px" alt="change_repository_settings"> <br>
 
 ### 13. 소스 코드 복사 및 저장소에 업로드
 
@@ -489,17 +489,17 @@ GitLab은 기본적으로 Local Network를 허용하지 않습니다. 아래 Web
 ### 15. 애플리케이션 배포
 
 애플리케이션 배포는 nodejs builder 이미지로 배포하며 추후에 Deployment는 수정해야 할 수 있습니다.
-<img src="images/26_nodejs_builder_images.png title="100px" alt="nodejs_builder_images"> <br>
+<img src="images/26_nodejs_builder_images.png" title="100px" alt="nodejs_builder_images"> <br>
 
 - 배포 시 Target Port는 `3000` 으로 설정하여 배포합니다.
-<img src="images/27_change_port.png title="100px" alt="change_port"> <br>
+<img src="images/27_change_port.png" title="100px" alt="change_port"> <br>
 
 ### 16. Webhook 설정
 
 Webhook URL은 Route 주소를 사용하고, 뒤에 api 주소는 BuildConfig에서 값을 확인하여 수정합니다.
 
 - 설정 값 확인
-  <img src="images/28_webhook.png title="100px" alt="webhook"> <br>
+  <img src="images/28_webhook.png" title="100px" alt="webhook"> <br>
 
 - Webhook URL
 
@@ -547,46 +547,46 @@ Webhook URL은 Route 주소를 사용하고, 뒤에 api 주소는 BuildConfig에
     ```
 
 - GitLab Webhook 설정 화면
-  <img src="images/29_webhook_settings.png title="100px" alt="webhook_settings"> <br>
+  <img src="images/29_webhook_settings.png" title="100px" alt="webhook_settings"> <br>
 
 - SSL verification 체크 해제
 
   Webhooks 메뉴의 아랫 부분에 있습니다.
-  <img src="images/30_ssl_verification_false.png title="100px" alt="ssl_verification_false"> <br>
+  <img src="images/30_ssl_verification_false.png" title="100px" alt="ssl_verification_false"> <br>
 
 - 추가된 Webhook 확인
-  <img src="images/32_add_webhook.png title="100px" alt="add_webhook"> <br>
+  <img src="images/32_add_webhook.png" title="100px" alt="add_webhook"> <br>
 
 - Test 버튼을 눌러서 Push events를 선택하여 API를 호출 테스트를 진행합니다.
-  <img src="images/33_push_test.png title="100px" alt="push_test"> <br>
+  <img src="images/33_push_test.png" title="100px" alt="push_test"> <br>
 
 - 상단에 HTTP 200이 보이면 성공한 것이며, 이제 소스 커밋 후 Trigger되는 것을 테스트 해볼 수 있습니다.
-  <img src="images/34_webhook_test_ok.png title="100px" alt="webhook_test_ok"> <br>
+  <img src="images/34_webhook_test_ok.png" title="100px" alt="webhook_test_ok"> <br>
 
 ### 17. 소스 수정 후 커밋
 
 `app.js` 파일 내용 수정 후 커밋을 수행합니다.
-<img src="images/35_source_update.png title="100px" alt=source_update"> <br>
+<img src="images/35_source_update.png" title="100px" alt=source_update"> <br>
 
 ### 18. Build Trigger 확인
 
 소스 내용 수정 후 커밋을 수행하면 다음과 같이 새로운 Build가 자동으로 실행되는 것을 확인 할 수 있으며, 이전에 Test로 날린 API에 대해서도 Build가 자동으로 수행되었음을 확인할 수 있습니다.
-<img src="images/36_build_trigger.png title="100px" alt=build_trigger"> <br>
+<img src="images/36_build_trigger.png" title="100px" alt=build_trigger"> <br>
 
 - 이미지 스트림 태그 확인
 
   새로운 이미지가 빌드 되었으므로 새로운 이미지 스트림 태그가 생겼을 것 입니다. 이미지 스트림 태그의 digest가 변경되었는지 확인합니다.
-  <img src="images/37_image_stream_tag.png title="100px" alt=image_stream_tag"> <br>  
+  <img src="images/37_image_stream_tag.png" title="100px" alt=image_stream_tag"> <br>  
 
 - Deployment Rollout
 
   새로운 빌드 수행이 완료 되었다면 Deployment를 롤아웃 해서 새로운 이미지로 기동 될 수 있게 합니다.
-  <img src="images/38_rollout.png title="100px" alt=rollout"> <br> 
+  <img src="images/38_rollout.png" title="100px" alt=rollout"> <br> 
 
 ### 19. 페이지 확인
 
 - 수정 전
-  <img src="images/38_org_pages.png title="100px" alt=org_pages"> <br> 
+  <img src="images/38_org_pages.png" title="100px" alt=org_pages"> <br> 
 
 - 수정 후
-  <img src="images/39_after_pages.png title="100px" alt=after_pages"> <br> 
+  <img src="images/39_after_pages.png" title="100px" alt=after_pages"> <br> 
