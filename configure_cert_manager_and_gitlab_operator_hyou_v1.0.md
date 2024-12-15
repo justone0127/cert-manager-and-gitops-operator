@@ -137,7 +137,7 @@ Cert Manager가 올바르게 GitLab 인증서를 발급하고 있는지 확인
     ```bash
     $ oc get certificate -n gitlab-system
     NAME          READY   SECRET       AGE
-  gitlab-cert   True    gitlab-tls   2m44s
+    gitlab-cert   True    gitlab-tls   2m44s
     ```
 
 - 인증서 세부 정보 확인
