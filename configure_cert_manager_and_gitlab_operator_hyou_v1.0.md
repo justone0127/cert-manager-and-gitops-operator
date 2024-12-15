@@ -776,3 +776,31 @@ Webhook URL은 Route 주소를 사용하고, 뒤에 api 주소는 BuildConfig에
   ```
 
   
+- rollout Tasks
+
+```yaml
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: rollout-deployment
+  namespace: poc-app
+spec:
+  params:
+    - description: The name of the Deployment to rollout
+      name: deployment-name
+      type: string
+    - default: test
+      description: The namespace of the Deployment
+      name: namespace
+      type: string
+  steps:
+    - computeResources: {}
+      image: registry.access.redhat.com/openshift4/ose-cli
+      name: rollout
+      script: |
+        #!/usr/bin/env bash
+        set -e
+        echo "Rolling out Deployment: $(params.deployment-name) in Namespace: $(params.namespace)"
+        oc rollout restart deployment/$(params.deployment-name) -n $(params.namespace)
+```
+  
