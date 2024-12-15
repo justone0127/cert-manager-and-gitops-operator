@@ -81,21 +81,7 @@
   다음과 같이 상태가 Ready 상태이면 정상적으로 생성된 것 입니다.
   <img src="images/19_gitlab_certificate.png" title="100px" alt="gitlab_certificate"> <br>  
 
-### 3. OpenShift에 인증서 등록
-
-GibLab이 샐행되는 OpenShift 클러스터에 인증서를 등록합니다.
-
-- Root CA를 OpenShift에서 신뢰하도록 설정
-
-  ```bash
-  oc create configmap root-ca-configmap \
-    --from-file=ca.crt=root-ca.crt -n openshift-config
-  oc patch proxy/cluster --type=merge -p='{"spec":{"trustedCA":{"name":"root-ca-configmap"}}}'
-  ```
-
-- GitLab Pod에 TLS 인증서 적용 : GitLab Pod가 `gitlab-tls`를 참조하도록 구성합니다.
-
-### 4. GitLab에 Root CA 등록 및 인스턴스 생성
+### 3. GitLab에 Root CA 등록 및 인스턴스 생성
 
 인스턴스 생성 시 인증서를 참조하도록 설정합니다.
 
@@ -136,7 +122,7 @@ GibLab이 샐행되는 OpenShift 클러스터에 인증서를 등록합니다.
 - 상태 확인
   <img src="images/20_gitlab_instance_running.png" title="100px" alt="gitlab_instance_running"> <br>  
 
-### 5. Cert Manager 상태 확인
+### 4. Cert Manager 상태 확인
 
 Cert Manager가 올바르게 GitLab 인증서를 발급하고 있는지 확인
 
@@ -206,7 +192,7 @@ Cert Manager가 올바르게 GitLab 인증서를 발급하고 있는지 확인
 
     > Stauts에서 Ready=True를 확인하고, 인증서가 발급되어 gitlab-tls에 저장되었는지 확인합니다.
 
-### 6. 인증서 확인
+### 5. 인증서 확인
 
 Cert Manager가 발급한 인증서가 올바르게 Secret에 저장되었느지 확인합니다.
 
@@ -322,7 +308,7 @@ Cert Manager가 발급한 인증서가 올바르게 Secret에 저장되었느지
 
     > Output에서 인증서의 CN (Common Name), SAN (Subject Alternative Names). 및 유효 기간을 확인합니다.
 
-### 7. Ingress와 Cert Manager 연결 확인
+### 6. Ingress와 Cert Manager 연결 확인
 
 Ingress가 올 바르게 Cert Manager에서 발급한 인증서를 사용하고 있는지 확인합니다.
 
@@ -397,7 +383,7 @@ Ingress가 올 바르게 Cert Manager에서 발급한 인증서를 사용하고 
   openssl s_client -connect gitlab.apps.cluster-wzssh.wzssh.sandbox1204.opentlc.com:443 -showcerts
   ```
 
-### 8. GitLab Web Service Defaulst 및 Webhook Route 노출하기
+### 7. GitLab Web Service Defaulst 및 Webhook Route 노출하기
 
 - GitLab Web Service Defaulst 및 Webhook URL을 외부에서 호출 할 수 있도록 해당 서비스를 Route로 노출해야 합니다. 기본으로 노출되어 있지 않습니다.
 
@@ -407,14 +393,14 @@ Ingress가 올 바르게 Cert Manager에서 발급한 인증서를 사용하고 
 - 콘솔 확인
   <img src="images/22_gitlab_route_console.png" title="100px" alt="gitlab_route_console"> <br>  
 
-### 9. GitLab 최초 로그인 시 inistial 비밀번호 확인
+### 8. GitLab 최초 로그인 시 inistial 비밀번호 확인
 
 - `gitlab-system` 에 `gitlab-gitlab-initial-root-password` 정보를 확인하여 로그인 후 패스워드 변경
 
 - 프로젝트 생성하고 Repository에 Push 권한 부여
   <img src="images/01_repository.png" title="100px" alt="repository"> <br>  
 
-### 10-. Local Network 허용 
+### 9. Local Network 허용 
 
 GitLab은 기본적으로 Local Network를 허용하지 않습니다. 아래 Webhook URL을 보면 내부 로컬을 호출하도록 되어 있어서 이를 허용해야 합니다.
 
@@ -424,7 +410,7 @@ GitLab은 기본적으로 Local Network를 허용하지 않습니다. 아래 Web
 - Network > Outbounds requests > Allow requests to the local network from webhooks and integrations를 선택하고 저장합니다.
   <img src="images/10_local_network_setting_02.png" title="100px" alt="local_network_setting_02"> <br>  
 
-### 11. 프로젝트 생성 및 리포지토리 권한 설정 변경
+### 10. 프로젝트 생성 및 리포지토리 권한 설정 변경
 
 - 프로젝트 생성 메뉴를 선택합니다.
   <img src="images/23_create_gitlab_project.png" title="100px" alt="create_gitlab_project"> <br>  
@@ -441,12 +427,12 @@ GitLab은 기본적으로 Local Network를 허용하지 않습니다. 아래 Web
   - Visibility Level : `Public`
     <img src="images/24_create_gitlab_project03.png" title="100px" alt="create_gitlab_project03"> <br>  
 
-### 12. 프로젝트 리포지토리 권한 설정 변경
+### 11. 프로젝트 리포지토리 권한 설정 변경
 
 소소 코드를 Push 할 수 있도록 권한 설정을 다음과 같이 변경하여 반영합니다.
 <img src="images/change_repository_settings.png" title="100px" alt="change_repository_settings"> <br>  
 
-### 13. 소스 코드 복사 및 저장소에 업로드
+### 12. 소스 코드 복사 및 저장소에 업로드
 
 - 소스 코드 복사
 
@@ -488,7 +474,7 @@ GitLab은 기본적으로 Local Network를 허용하지 않습니다. 아래 Web
 
   > Push 할 때 계정 (root/${PASSWORD}
 
-### 15. 애플리케이션 배포
+### 13. 애플리케이션 배포
 
 애플리케이션 배포는 nodejs builder 이미지로 배포하며 추후에 Deployment는 수정해야 할 수 있습니다.
 <img src="images/26_nodejs_builder_images.png" title="100px" alt="nodejs_builder_images"> <br>  
@@ -496,7 +482,7 @@ GitLab은 기본적으로 Local Network를 허용하지 않습니다. 아래 Web
 - 배포 시 Target Port는 `3000` 으로 설정하여 배포합니다.
   <img src="images/27_change_port.png" title="100px" alt="change_port"> <br>  
 
-### 16. Webhook 설정
+### 14. Webhook 설정
 
 Webhook URL은 Route 주소를 사용하고, 뒤에 api 주소는 BuildConfig에서 값을 확인하여 수정합니다.
 
@@ -565,12 +551,12 @@ Webhook URL은 Route 주소를 사용하고, 뒤에 api 주소는 BuildConfig에
 - 상단에 HTTP 200이 보이면 성공한 것이며, 이제 소스 커밋 후 Trigger되는 것을 테스트 해볼 수 있습니다.
   <img src="images/34_webhook_test_ok.png" title="100px" alt="push_test"> <br>
 
-### 17. 소스 수정 후 커밋
+### 15. 소스 수정 후 커밋
 
 `app.js` 파일 내용 수정 후 커밋을 수행합니다.
 <img src="images/35_source_update.png" title="100px" alt="source_update"> <br>
 
-### 18. Build Trigger 확인
+### 16. Build Trigger 확인
 
 소스 내용 수정 후 커밋을 수행하면 다음과 같이 새로운 Build가 자동으로 실행되는 것을 확인 할 수 있으며, 이전에 Test로 날린 API에 대해서도 Build가 자동으로 수행되었음을 확인할 수 있습니다.
 <img src="images/36_build_trigger.png" title="100px" alt="build_trigger"> <br>
@@ -585,7 +571,7 @@ Webhook URL은 Route 주소를 사용하고, 뒤에 api 주소는 BuildConfig에
   새로운 빌드 수행이 완료 되었다면 Deployment를 롤아웃 해서 새로운 이미지로 기동 될 수 있게 합니다.
   <img src="images/38_rollout.png" title="100px" alt="rollout"> <br>
 
-### 19. 페이지 확인
+### 17. 페이지 확인
 
 - 수정 전
   <img src="images/38_org_pages.png" title="100px" alt="org_pages"> <br>
@@ -593,7 +579,7 @@ Webhook URL은 Route 주소를 사용하고, 뒤에 api 주소는 BuildConfig에
 - 수정 후
   <img src="images/39_after_pages.png" title="100px" alt="after_pages"> <br>
 
-### 20. OpenShift Pipelines Trigger
+### 18. OpenShift Pipelines Trigger
 
 - 사전 요구 사항
   
