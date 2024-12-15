@@ -592,20 +592,19 @@ Webhook URL은 Route 주소를 사용하고, 뒤에 api 주소는 BuildConfig에
   apiVersion: tekton.dev/v1
   kind: Pipeline
   metadata:
-    name: test-app-rollout
-    namespace: test
+    name: poc-app-rollout
   spec:
     params:
-      - default: test-app
+      - default: poc-app
         name: APP_NAME
         type: string
-      - default: 'https://gitlab.apps.cluster-hfqtc.hfqtc.sandbox2220.opentlc.com/root/test.git'
+      - default: 'https://gitlab.apps.cluster-td4lk.td4lk.sandbox1543.opentlc.com/root/test.git'
         name: GIT_REPO
         type: string
       - default: main
         name: GIT_REVISION
         type: string
-      - default: 'image-registry.openshift-image-registry.svc:5000/test/test-app'
+      - default: 'image-registry.openshift-image-registry.svc:5000/poc-app/poc-app'
         name: IMAGE_NAME
         type: string
       - default: .
@@ -635,9 +634,9 @@ Webhook URL은 Route 주소를 사용하고, 뒤에 api 주소는 BuildConfig에
         params:
           - name: IMAGE
             value: $(params.IMAGE_NAME)
-          - name: TLSVERIFY
+          - name: TLS_VERIFY
             value: 'false'
-          - name: PATH_CONTEXT
+          - name: CONTEXT
             value: $(params.PATH_CONTEXT)
           - name: VERSION
             value: $(params.VERSION)
@@ -653,8 +652,8 @@ Webhook URL은 Route 주소를 사용하고, 뒤에 api 주소는 BuildConfig에
         params:
           - name: SCRIPT
             value: |
-              oc rollout restart deployment/$(params.APP_NAME) -n test && \
-              oc rollout status deployment/$(params.APP_NAME) -n test
+              oc rollout restart deployment/$(params.APP_NAME) -n poc-app && \
+              oc rollout status deployment/$(params.APP_NAME) -n poc-app
         runAfter:
           - build
         taskRef:
@@ -671,92 +670,90 @@ Webhook URL은 Route 주소를 사용하고, 뒤에 api 주소는 BuildConfig에
   apiVersion: triggers.tekton.dev/v1beta1
   kind: TriggerBinding
   metadata:
-    name: test-app
+    name: poc-app
   spec:
     params:
-    - name: git-repo-url
-      value: $(body.repository.url)
-    - name: git-repo-name
-      value: $(body.repository.name)
-    - name: git-revision
-      value: $(body.head_commit.id)
+      - name: git-repo-url
+        value: $(body.repository.git_http_url)
+      - name: git-repo-name
+        value: $(body.repository.name)
+      - name: git-revision
+        value: $(body.ref)
   ---
   apiVersion: triggers.tekton.dev/v1beta1
   kind: TriggerTemplate
   metadata:
-    name: test-app
+    name: poc-app
   spec:
     params:
-    - name: git-repo-url
-      description: The git repository url
-    - name: git-revision
-      description: The git revision
-      default: pipelines-1.15.1
-    - name: git-repo-name
-      description: The name of the deployment to be created / patched
-  
+      - description: The git repository url
+        name: git-repo-url
+      - default: pipelines-1.15.1
+        description: The git revision
+        name: git-revision
+      - description: The name of the deployment to be created / patched
+        name: git-repo-name
     resourcetemplates:
-    - apiVersion: tekton.dev/v1
-      kind: PipelineRun
-      metadata:
-        generateName: build-deploy-$(tt.params.git-repo-name)-
-      spec:
-        params:
-          - name: APP_NAME
-            value: test-app
-          - name: GIT_REPO
-            value: 'https://gitlab.apps.cluster-hfqtc.hfqtc.sandbox2220.opentlc.com/root/test.git'
-          - name: GIT_REVISION
-            value: main
-          - name: IMAGE_NAME
-            value: 'image-registry.openshift-image-registry.svc:5000/test/test-app'
-          - name: PATH_CONTEXT
-            value: .
-          - name: VERSION
-            value: 20-ubi8
-        pipelineRef:
-          name: test-app-rollout
-        taskRunTemplate:
-          serviceAccountName: pipeline
-        timeouts:
-          pipeline: 1h0m0s
-        workspaces:
-          - name: workspace
-            volumeClaimTemplate:
-              metadata:
-                creationTimestamp: null
-                labels:
-                  tekton.dev/pipeline: test-app
-              spec:
-                accessModes:
-                  - ReadWriteOnce
-                resources:
-                  requests:
-                    storage: 1Gi
-              status: {}
+      - apiVersion: tekton.dev/v1
+        kind: PipelineRun
+        metadata:
+          generateName: build-deploy-$(tt.params.git-repo-name)-
+        spec:
+          params:
+            - name: APP_NAME
+              value: poc-app
+            - name: GIT_REPO
+              value: 'https://gitlab.apps.cluster-td4lk.td4lk.sandbox1543.opentlc.com/root/test.git'
+            - name: GIT_REVISION
+              value: main
+            - name: IMAGE_NAME
+              value: 'image-registry.openshift-image-registry.svc:5000/poc-app/poc-app'
+            - name: PATH_CONTEXT
+              value: .
+            - name: VERSION
+              value: 20-ubi8
+          pipelineRef:
+            name: poc-app-rollout
+          taskRunTemplate:
+            serviceAccountName: pipeline
+          timeouts:
+            pipeline: 1h0m0s
+          workspaces:
+            - name: workspace
+              volumeClaimTemplate:
+                metadata:
+                  creationTimestamp: null
+                  labels:
+                    tekton.dev/pipeline: poc-app
+                spec:
+                  accessModes:
+                    - ReadWriteOnce
+                  resources:
+                    requests:
+                      storage: 1Gi
   ---
   apiVersion: triggers.tekton.dev/v1beta1
   kind: Trigger
   metadata:
-    name: test-app-trigger
+    name: poc-app-trigger
   spec:
     serviceAccountName: pipeline
     bindings:
-      - ref: test-app
+      - ref: poc-app
     template:
-      ref: test-app
+      ref: poc-app
   ---
   apiVersion: triggers.tekton.dev/v1beta1
   kind: EventListener
   metadata:
-    name: test-app
+    name: poc-app
   spec:
     serviceAccountName: pipeline
     triggers:
     - bindings:
-      - ref: test-app
+      - ref: poc-app
       template:
-        ref: test-app
+        ref: poc-app
   ---
   apiVersion: route.openshift.io/v1
   kind: Route
@@ -764,43 +761,16 @@ Webhook URL은 Route 주소를 사용하고, 뒤에 api 주소는 BuildConfig에
     labels:
       app.kubernetes.io/managed-by: EventListener
       app.kubernetes.io/part-of: Triggers
-      eventlistener: test-app
-    name: el-test-app
+      eventlistener: poc-app
+    name: el-poc-app
   spec:
     port:
       targetPort: http-listener
     to:
       kind: Service
-      name: el-test-app
+      name: el-poc-app
       weight: 100
   ```
 
   
-- rollout Tasks
-
-```yaml
-apiVersion: tekton.dev/v1
-kind: Task
-metadata:
-  name: rollout-deployment
-  namespace: poc-app
-spec:
-  params:
-    - description: The name of the Deployment to rollout
-      name: deployment-name
-      type: string
-    - default: test
-      description: The namespace of the Deployment
-      name: namespace
-      type: string
-  steps:
-    - computeResources: {}
-      image: registry.access.redhat.com/openshift4/ose-cli
-      name: rollout
-      script: |
-        #!/usr/bin/env bash
-        set -e
-        echo "Rolling out Deployment: $(params.deployment-name) in Namespace: $(params.namespace)"
-        oc rollout restart deployment/$(params.deployment-name) -n $(params.namespace)
-```
   
