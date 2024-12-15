@@ -665,6 +665,7 @@ Webhook URL은 Route 주소를 사용하고, 뒤에 api 주소는 BuildConfig에
   ```
 
 - Event Trigger Template YAML
+  **네임스페이스랑, 이름 잘 확인하고 생성할 것!!**
 
   ```yaml
   apiVersion: triggers.tekton.dev/v1beta1
