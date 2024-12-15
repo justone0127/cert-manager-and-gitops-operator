@@ -1,0 +1,5 @@
+# 계정 정보는 수정해서 실행 할 것!!!
+
+skopeo copy --src-creds '${user}:${password}' --src-tls-verify=false --remove-signatures  --dest-creds 'kecoadmin:vtX8vjwgLmbFTaagJUkEa4QPJWrb38pkzNp5QTNVshXnNu3TiWH8v2SLLxfvXQkb' --dest-tls-verify=false  docker://registry.redhat.io/ubi8:8.10-1132.1733300785 docker://ocp-registry-quay-quay.apps.cluster-nbf58.nbf58.sandbox1985.opentlc.com/rhel8/ubi8:8.10-poc
+
+oc import-image ubi8:8.10-poc --from=ocp-registry-quay-quay.apps.cluster-nbf58.nbf58.sandbox1985.opentlc.com/rhel8/ubi8:8.10-poc --confirm --insecure -n openshift
