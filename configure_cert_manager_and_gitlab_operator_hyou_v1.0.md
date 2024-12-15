@@ -69,7 +69,7 @@
       - "gitlab.apps.cluster-hfqtc.hfqtc.sandbox2220.opentlc.com" 
     issuerRef:
       name: ca-issuer
-    kind: ClusterIssuer
+      kind: ClusterIssuer
   ```
   
   > GitLab에서 사용할 TLS Secret이 생성됩니다 (`gitlab-tls`)
