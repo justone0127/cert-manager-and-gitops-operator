@@ -64,9 +64,9 @@
     namespace: gitlab-system
   spec:
     secretName: gitlab-tls
-    commonName: "gitlab.apps.cluster-hfqtc.hfqtc.sandbox2220.opentlc.com"
+    commonName: gitlab.apps.cluster-hfqtc.hfqtc.sandbox2220.opentlc.com
     dnsNames:
-      - "gitlab.apps.cluster-hfqtc.hfqtc.sandbox2220.opentlc.com" 
+      - gitlab.apps.cluster-hfqtc.hfqtc.sandbox2220.opentlc.com 
     issuerRef:
       name: ca-issuer
       kind: ClusterIssuer
