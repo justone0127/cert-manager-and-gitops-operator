@@ -48,10 +48,13 @@
 - Cluster Issuer 상태 확인
 
   상태가 아래 그림처럼 Ready 상태여야 인증서가 정상적으로 생성된 것입니다.
-
-  <img src="images/17_cluster_issuer.png" title="100px" alt="cluster issuer details"> <br>
+  
+  ![17_cluster_issuer](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\17_cluster_issuer.png)
+  
 - ca-issuer를 선택하여 아래 상태 확인 시 *Sigining CA verified*라고 보여야 합니다.
-  <img src="images/18_ca_issuer_ready.png" title="100px" alt="cluster issuer ready"> <br>
+
+  ![18_ca_issuer_ready](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\18_ca_issuer_ready.png)
+  
 - GitLab 도메인을 위한 인증서 요청
 
   GitLab 인증서 요청을 위해서는 GitLab Operator가 설치되어 있어야 하며, Operator 설치 시 자동으로 생성되는 `gitlab-system` 네임스페이스에 생성합니다.
@@ -66,7 +69,7 @@
     secretName: gitlab-tls
     commonName: gitlab.apps.cluster-hfqtc.hfqtc.sandbox2220.opentlc.com
     dnsNames:
-      - gitlab.apps.cluster-hfqtc.hfqtc.sandbox2220.opentlc.com 
+      - gitlab.apps.cluster-hfqtc.hfqtc.sandbox2220.opentlc.com
     issuerRef:
       name: ca-issuer
       kind: ClusterIssuer
@@ -77,9 +80,24 @@
 - 인증서 생성 확인
 
   다음과 같이 상태가 Ready 상태이면 정상적으로 생성된 것 입니다.
-  <img src="images/19_gitlab_certificate.png" title="100px" alt="gitlab_certificate"> <br>
 
-### 3. GitLab에 Root CA 등록 및 인스턴스 생성
+  ![19_gitlab_certificate](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\19_gitlab_certificate.png)
+
+### 3. OpenShift에 인증서 등록
+
+GibLab이 샐행되는 OpenShift 클러스터에 인증서를 등록합니다.
+
+- Root CA를 OpenShift에서 신뢰하도록 설정
+
+  ```bash
+  oc create configmap root-ca-configmap \
+    --from-file=ca.crt=root-ca.crt -n openshift-config
+  oc patch proxy/cluster --type=merge -p='{"spec":{"trustedCA":{"name":"root-ca-configmap"}}}'
+  ```
+
+- GitLab Pod에 TLS 인증서 적용 : GitLab Pod가 `gitlab-tls`를 참조하도록 구성합니다.
+
+### 4. GitLab에 Root CA 등록 및 인스턴스 생성
 
 인스턴스 생성 시 인증서를 참조하도록 설정합니다.
 
@@ -118,9 +136,10 @@
 구성요소가 정상적으로 올라오면 gitLab 인스턴스가 Ready 상태로 변경되며, 모든 구성요소가 올라오는 데까지는 시간이 조금 걸립니다.
 
 - 상태 확인
-  <img src="images/20_gitlab_instance_running.png" title="100px" alt="gitlab_instance_running"> <br>
 
-### 4. Cert Manager 상태 확인
+  ![20_gitlab_instance_running](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\20_gitlab_instance_running.png)
+
+### 5. Cert Manager 상태 확인
 
 Cert Manager가 올바르게 GitLab 인증서를 발급하고 있는지 확인
 
@@ -190,7 +209,7 @@ Cert Manager가 올바르게 GitLab 인증서를 발급하고 있는지 확인
 
     > Stauts에서 Ready=True를 확인하고, 인증서가 발급되어 gitlab-tls에 저장되었는지 확인합니다.
 
-### 5. 인증서 확인
+### 6. 인증서 확인
 
 Cert Manager가 발급한 인증서가 올바르게 Secret에 저장되었느지 확인합니다.
 
@@ -306,7 +325,7 @@ Cert Manager가 발급한 인증서가 올바르게 Secret에 저장되었느지
 
     > Output에서 인증서의 CN (Common Name), SAN (Subject Alternative Names). 및 유효 기간을 확인합니다.
 
-### 6. Ingress와 Cert Manager 연결 확인
+### 7. Ingress와 Cert Manager 연결 확인
 
 Ingress가 올 바르게 Cert Manager에서 발급한 인증서를 사용하고 있는지 확인합니다.
 
@@ -381,40 +400,47 @@ Ingress가 올 바르게 Cert Manager에서 발급한 인증서를 사용하고 
   openssl s_client -connect gitlab.apps.cluster-wzssh.wzssh.sandbox1204.opentlc.com:443 -showcerts
   ```
 
-### 7. GitLab Web Service Default 및 Webhook Route 노출하기
+### 8. GitLab Web Service Defaulst 및 Webhook Route 노출하기
 
-- GitLab Web Service Default를 외부에서 호출 할 수 있도록 해당 서비스를 Route로 노출해야 합니다. 기본으로 노출되어 있지 않습니다.
+- GitLab Web Service Defaulst 및 Webhook URL을 외부에서 호출 할 수 있도록 해당 서비스를 Route로 노출해야 합니다. 기본으로 노출되어 있지 않습니다.
 
-- GitLab Web Service Default
-  <img src="images/21_gitlab_route2.png" title="100px" alt="gitlab_route"> <br>
+- GitLab Web Service Default 
+
+  ![21_gitlab_route2](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\21_gitlab_route2.png)
 
 - 콘솔 확인
-  <img src="images/22_gitlab_route_console.png" title="100px" alt="gitlab_route_console"> <br>
 
-### 8. GitLab 최초 로그인 시 inistial 비밀번호 확인
+  ![22_gitlab_route_console](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\22_gitlab_route_console.png)
+
+### 9. GitLab 최초 로그인 시 inistial 비밀번호 확인
 
 - `gitlab-system` 에 `gitlab-gitlab-initial-root-password` 정보를 확인하여 로그인 후 패스워드 변경
 
 - 프로젝트 생성하고 Repository에 Push 권한 부여
-  <img src="images/01_repository.png" title="100px" alt="repository"> <br>
 
-### 9. Local Network 허용 
+  ![01_repository](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\01_repository.png)
+
+### 10-. Local Network 허용 
 
 GitLab은 기본적으로 Local Network를 허용하지 않습니다. 아래 Webhook URL을 보면 내부 로컬을 호출하도록 되어 있어서 이를 허용해야 합니다.
 
 - 깃 로고 아이콘 선택 > 하단의 Amin 메뉴 선택
-  <img src="images/10_local_network_setting_01.png" title="100px" alt="local_network_setting_01"> <br>
+
+  ![10_local_network_setting_01](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\10_local_network_setting_01.png)
 
 - Network > Outbounds requests > Allow requests to the local network from webhooks and integrations를 선택하고 저장합니다.
-  <img src="images/10_local_network_setting_02.png" title="100px" alt="local_network_setting_02"> <br>
 
-### 9. 프로젝트 생성 및 리포지토리 권한 설정 변경
+  ![10_local_network_setting_02](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\10_local_network_setting_02.png)
+
+### 11. 프로젝트 생성 및 리포지토리 권한 설정 변경
 
 - 프로젝트 생성 메뉴를 선택합니다.
-  <img src="images/23_create_gitlab_project.png" title="100px" alt="create_gitlab_project"> <br>
-  
+
+  ![23_create_gitlab_project](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\23_create_gitlab_project.png)
+
 - **Create blank project** 메뉴를 선택합니다.
-  <img src="images/24_create_gitlab_project02.png" title="100px" alt="create_gitlab_project02"> <br>
+
+  ![24_create_gitlab_project02](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\24_create_gitlab_project02.png)
 
 - 상세 설정 후 Create Proejct를 선택합니다.
 
@@ -423,14 +449,16 @@ GitLab은 기본적으로 Local Network를 허용하지 않습니다. 아래 Web
   - Project URL : namespace는 `root`를 선택
 
   - Visibility Level : `Public`
-    <img src="images/24_create_gitlab_project03.png" title="100px" alt="create_gitlab_project03"> <br>
 
-### 10. 프로젝트 리포지토리 권한 설정 변경
+    ![24_create_gitlab_project03](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\24_create_gitlab_project03.png)
+
+### 12. 프로젝트 리포지토리 권한 설정 변경
 
 소소 코드를 Push 할 수 있도록 권한 설정을 다음과 같이 변경하여 반영합니다.
-<img src="images/25_change_repository_settings.png" title="100px" alt="change_repository_settings"> <br>
 
-### 11. 소스 코드 복사 및 저장소에 업로드
+![25_change_repository_settings](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\25_change_repository_settings.png)
+
+### 13. 소스 코드 복사 및 저장소에 업로드
 
 - 소스 코드 복사
 
@@ -472,20 +500,23 @@ GitLab은 기본적으로 Local Network를 허용하지 않습니다. 아래 Web
 
   > Push 할 때 계정 (root/${PASSWORD}
 
-### 12. 애플리케이션 배포
+### 15. 애플리케이션 배포
 
 애플리케이션 배포는 nodejs builder 이미지로 배포하며 추후에 Deployment는 수정해야 할 수 있습니다.
-<img src="images/26_nodejs_builder_images.png" title="100px" alt="nodejs_builder_images"> <br>
+
+![26_nodejs_builder_images](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\26_nodejs_builder_images.png)
 
 - 배포 시 Target Port는 `3000` 으로 설정하여 배포합니다.
-<img src="images/27_change_port.png" title="100px" alt="change_port"> <br>
 
-### 13. Webhook 설정
+  ![27_change_port](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\27_change_port.png)
+
+### 16. Webhook 설정
 
 Webhook URL은 Route 주소를 사용하고, 뒤에 api 주소는 BuildConfig에서 값을 확인하여 수정합니다.
 
 - 설정 값 확인
-  <img src="images/28_webhook.png" title="100px" alt="webhook"> <br>
+
+  ![28_webhook](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\28_webhook.png)
 
 - Webhook URL
 
@@ -498,7 +529,8 @@ Webhook URL은 Route 주소를 사용하고, 뒤에 api 주소는 BuildConfig에
   ```bash
   0c3caffd03fb4878
   ```
-  <img src="images/31_copy_secret.png" title="100px" alt="copy_secret"> <br>
+
+  ![31_copy_secret](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\31_copy_secret.png)
 
 - 허가 받지 않은 사용자에 대한 `system:webhook` 롤 바인딩 설정 추가
 
@@ -533,51 +565,64 @@ Webhook URL은 Route 주소를 사용하고, 뒤에 api 주소는 BuildConfig에
     ```
 
 - GitLab Webhook 설정 화면
-  <img src="images/29_webhook_settings.png" title="100px" alt="webhook_settings"> <br>
+
+  ![29_webhook_settings](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\29_webhook_settings.png)
 
 - SSL verification 체크 해제
 
   Webhooks 메뉴의 아랫 부분에 있습니다.
-  <img src="images/30_ssl_verification_false.png" title="100px" alt="ssl_verification_false"> <br>
+
+  ![30_ssl_verification_false](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\30_ssl_verification_false.png)
 
 - 추가된 Webhook 확인
-  <img src="images/32_add_webhook.png" title="100px" alt="add_webhook"> <br>
+
+  ![32_add_webhook](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\32_add_webhook.png)
 
 - Test 버튼을 눌러서 Push events를 선택하여 API를 호출 테스트를 진행합니다.
-  <img src="images/33_push_test.png" title="100px" alt="push_test"> <br>
+
+  ![33_push_test](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\33_push_test.png)
 
 - 상단에 HTTP 200이 보이면 성공한 것이며, 이제 소스 커밋 후 Trigger되는 것을 테스트 해볼 수 있습니다.
-  <img src="images/34_webhook_test_ok.png" title="100px" alt="webhook_test_ok"> <br>
 
-### 14. 소스 수정 후 커밋
+  ![34_webhook_test_ok](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\34_webhook_test_ok.png)
+
+### 17. 소스 수정 후 커밋
 
 `app.js` 파일 내용 수정 후 커밋을 수행합니다.
-<img src="images/35_source_update.png" title="100px" alt="source_update"> <br>
 
-### 15. Build Trigger 확인
+![35_source_update](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\35_source_update.png)
+
+### 18. Build Trigger 확인
 
 소스 내용 수정 후 커밋을 수행하면 다음과 같이 새로운 Build가 자동으로 실행되는 것을 확인 할 수 있으며, 이전에 Test로 날린 API에 대해서도 Build가 자동으로 수행되었음을 확인할 수 있습니다.
-<img src="images/36_build_trigger.png" title="100px" alt="build_trigger"> <br>
+
+![36_build_trigger](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\36_build_trigger.png)
 
 - 이미지 스트림 태그 확인
 
   새로운 이미지가 빌드 되었으므로 새로운 이미지 스트림 태그가 생겼을 것 입니다. 이미지 스트림 태그의 digest가 변경되었는지 확인합니다.
-  <img src="images/37_image_stream_tag.png" title="100px" alt="image_stream_tag"> <br>  
+
+  ![37_image_stream_tag](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\37_image_stream_tag.png)
+
+  
 
 - Deployment Rollout
 
   새로운 빌드 수행이 완료 되었다면 Deployment를 롤아웃 해서 새로운 이미지로 기동 될 수 있게 합니다.
-  <img src="images/38_rollout.png" title="100px" alt="rollout"> <br> 
 
-### 16. 페이지 확인
+  ![38_rollout](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\38_rollout.png)
 
-- 수정 전 <br>
-  <img src="images/38_org_pages.png" title="100px" alt="org_pages"> <br> 
+### 19. 페이지 확인
 
-- 수정 후 <br>
-  <img src="images/39_after_pages.png" title="100px" alt="after_pages"> <br>
+- 수정 전
 
-### 17. OpenShift Pipelines Trigger
+  ![38_org_pages](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\38_org_pages.png)
+
+- 수정 후
+
+  ![39_after_pages](C:\Works\01_자료\01_OCP\2024_한국환경공단\images\39_after_pages.png)
+
+### 20. OpenShift Pipelines Trigger
 
 - 사전 요구 사항
   
@@ -770,3 +815,5 @@ Webhook URL은 Route 주소를 사용하고, 뒤에 api 주소는 BuildConfig에
       name: el-test-app
       weight: 100
   ```
+
+  
