@@ -397,7 +397,7 @@ Ingress가 올 바르게 Cert Manager에서 발급한 인증서를 사용하고 
 
 ### 8. GitLab Web Service Defaulst 및 Webhook Route 노출하기
 
-- GitLab Web Service Defaulst 및 Webhook URL을 외부에서 호출 할 수 있도록 해당 서비스를 Route로 노출해야 합니다. 기본으로 노출되어 있지 않습니다.
+- GitLab Web Service Default를 외부에서 호출 할 수 있도록 해당 서비스를 Route로 노출해야 합니다. 기본으로 노출되어 있지 않습니다.
 
 - GitLab Web Service Default
   <img src="images/21_gitlab_route2.png" title="100px" alt="gitlab_route"> <br>
