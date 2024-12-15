@@ -586,6 +586,7 @@ Webhook URL은 Route 주소를 사용하고, 뒤에 api 주소는 BuildConfig에
 - OpenShift Pipeline Opeator가 설치 되어 있어야 함
   
 - Rollout 포함 Pipeline YAML
+  **파이프라인은 기본으로 생성해서 roullout 부분만 대체헤서 사용할 것!!!**
 
   ```yaml
   apiVersion: tekton.dev/v1
