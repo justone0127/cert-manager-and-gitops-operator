@@ -408,7 +408,7 @@ GitLab은 기본적으로 Local Network를 허용하지 않습니다. 아래 Web
 - Network > Outbounds requests > Allow requests to the local network from webhooks and integrations를 선택하고 저장합니다.
   <img src="images/10_local_network_setting_02.png" title="100px" alt="local_network_setting_02"> <br>
 
-### 10. 프로젝트 생성 및 리포지토리 권한 설정 변경
+### 9. 프로젝트 생성 및 리포지토리 권한 설정 변경
 
 - 프로젝트 생성 메뉴를 선택합니다.
   <img src="images/23_create_gitlab_project.png" title="100px" alt="create_gitlab_project"> <br>
@@ -425,12 +425,12 @@ GitLab은 기본적으로 Local Network를 허용하지 않습니다. 아래 Web
   - Visibility Level : `Public`
     <img src="images/24_create_gitlab_project03.png" title="100px" alt="create_gitlab_project03"> <br>
 
-### 11. 프로젝트 리포지토리 권한 설정 변경
+### 10. 프로젝트 리포지토리 권한 설정 변경
 
 소소 코드를 Push 할 수 있도록 권한 설정을 다음과 같이 변경하여 반영합니다.
 <img src="images/25_change_repository_settings.png" title="100px" alt="change_repository_settings"> <br>
 
-### 12. 소스 코드 복사 및 저장소에 업로드
+### 11. 소스 코드 복사 및 저장소에 업로드
 
 - 소스 코드 복사
 
@@ -472,7 +472,7 @@ GitLab은 기본적으로 Local Network를 허용하지 않습니다. 아래 Web
 
   > Push 할 때 계정 (root/${PASSWORD}
 
-### 13. 애플리케이션 배포
+### 12. 애플리케이션 배포
 
 애플리케이션 배포는 nodejs builder 이미지로 배포하며 추후에 Deployment는 수정해야 할 수 있습니다.
 <img src="images/26_nodejs_builder_images.png" title="100px" alt="nodejs_builder_images"> <br>
@@ -480,7 +480,7 @@ GitLab은 기본적으로 Local Network를 허용하지 않습니다. 아래 Web
 - 배포 시 Target Port는 `3000` 으로 설정하여 배포합니다.
 <img src="images/27_change_port.png" title="100px" alt="change_port"> <br>
 
-### 14. Webhook 설정
+### 13. Webhook 설정
 
 Webhook URL은 Route 주소를 사용하고, 뒤에 api 주소는 BuildConfig에서 값을 확인하여 수정합니다.
 
@@ -549,12 +549,12 @@ Webhook URL은 Route 주소를 사용하고, 뒤에 api 주소는 BuildConfig에
 - 상단에 HTTP 200이 보이면 성공한 것이며, 이제 소스 커밋 후 Trigger되는 것을 테스트 해볼 수 있습니다.
   <img src="images/34_webhook_test_ok.png" title="100px" alt="webhook_test_ok"> <br>
 
-### 15. 소스 수정 후 커밋
+### 14. 소스 수정 후 커밋
 
 `app.js` 파일 내용 수정 후 커밋을 수행합니다.
 <img src="images/35_source_update.png" title="100px" alt="source_update"> <br>
 
-### 16. Build Trigger 확인
+### 15. Build Trigger 확인
 
 소스 내용 수정 후 커밋을 수행하면 다음과 같이 새로운 Build가 자동으로 실행되는 것을 확인 할 수 있으며, 이전에 Test로 날린 API에 대해서도 Build가 자동으로 수행되었음을 확인할 수 있습니다.
 <img src="images/36_build_trigger.png" title="100px" alt="build_trigger"> <br>
@@ -569,7 +569,7 @@ Webhook URL은 Route 주소를 사용하고, 뒤에 api 주소는 BuildConfig에
   새로운 빌드 수행이 완료 되었다면 Deployment를 롤아웃 해서 새로운 이미지로 기동 될 수 있게 합니다.
   <img src="images/38_rollout.png" title="100px" alt="rollout"> <br> 
 
-### 17. 페이지 확인
+### 16. 페이지 확인
 
 - 수정 전 <br>
   <img src="images/38_org_pages.png" title="100px" alt="org_pages"> <br> 
@@ -577,7 +577,7 @@ Webhook URL은 Route 주소를 사용하고, 뒤에 api 주소는 BuildConfig에
 - 수정 후 <br>
   <img src="images/39_after_pages.png" title="100px" alt="after_pages"> <br>
 
-### 18. OpenShift Pipelines Trigger
+### 17. OpenShift Pipelines Trigger
 
 - 사전 요구 사항
   
