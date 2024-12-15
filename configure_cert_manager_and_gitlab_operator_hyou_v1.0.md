@@ -573,10 +573,10 @@ Webhook URL은 Route 주소를 사용하고, 뒤에 api 주소는 BuildConfig에
 
 ### 17. 페이지 확인
 
-- 수정 전
+- 수정 전 <br>
   <img src="images/38_org_pages.png" title="100px" alt="org_pages"> <br>
 
-- 수정 후
+- 수정 후 <br>
   <img src="images/39_after_pages.png" title="100px" alt="after_pages"> <br>
 
 ### 18. OpenShift Pipelines Trigger
