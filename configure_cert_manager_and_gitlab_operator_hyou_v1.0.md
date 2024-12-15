@@ -512,7 +512,7 @@ Webhook URL은 Route 주소를 사용하고, 뒤에 api 주소는 BuildConfig에
   ```bash
   0c3caffd03fb4878
   ```
-  <img src="images/31_copy_secret.png title="100px" alt="copy_secret"> <br>
+  <img src="images/31_copy_secret.png" title="100px" alt="copy_secret"> <br>
 
 - 허가 받지 않은 사용자에 대한 `system:webhook` 롤 바인딩 설정 추가
 
